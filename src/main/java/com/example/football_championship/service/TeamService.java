@@ -45,8 +45,8 @@ public class TeamService {
         });
 
         TeamProcessingResult result = new TeamProcessingResult();
-        List<Team> teamsSaved = teamRepository.saveAll(validTeams);
-        result.setValidTeams(teamsSaved);
+        teamRepository.saveAll(validTeams);
+        result.setValidTeams(validTeams);
         result.setErrors(errorMessages);
         return result;
     }
@@ -80,7 +80,7 @@ public class TeamService {
             Team existingTeam = team.get();
             try {
                 // Update the team details with the new values
-                existingTeam.setName(updateTeamDTO.getNewName() != null ? updateTeamDTO.getTeamName() : existingTeam.getName());
+                existingTeam.setName(updateTeamDTO.getNewName() != null ? updateTeamDTO.getNewName() : existingTeam.getName());
                 existingTeam.setRegistrationDate(updateTeamDTO.getNewRegistrationDate() != null ? updateTeamDTO.getNewRegistrationDate() : existingTeam.getRegistrationDate());
                 existingTeam.setGroupNumber(updateTeamDTO.getGroupNumber() != -1 ? updateTeamDTO.getGroupNumber() : existingTeam.getGroupNumber());
                 existingTeam.setTotalGoals(updateTeamDTO.getTotalGoals() + existingTeam.totalGoals);
@@ -113,9 +113,9 @@ public class TeamService {
     public boolean getOutcomeForTeam(String teamName, int groupNumber) {
         List<Team> teams = getRankingsByGroup(groupNumber);
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < teams.size(); i++) {
             Team currTeam = teams.get(i);
-            if (currTeam.name.equals(teamName)) {
+            if (currTeam.name.equals(teamName) && i < 4) {
                 return true;
             }
         }

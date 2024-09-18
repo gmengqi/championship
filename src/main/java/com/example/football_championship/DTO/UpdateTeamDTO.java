@@ -51,4 +51,20 @@ public class UpdateTeamDTO {
         return alternatePoints;
     }
 
+    public void setNewName(String name) {
+        this.newName = name;
+    }
+
+    public void setGroupNumber(int number) {
+        this.groupNumber = number;
+    }
+
+    public void setMatchesPlayed(int matches) {
+        this.matchesPlayed = matches;
+    }
+
+    public void setAlternatePoints(int points) {
+        this.alternatePoints = points;
+    }
+
 }
