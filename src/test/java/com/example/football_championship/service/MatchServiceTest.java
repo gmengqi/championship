@@ -1,0 +1,90 @@
+package com.example.football_championship.service;
+
+import com.example.football_championship.DTO.CreateMatchDTO;
+import com.example.football_championship.DTO.UpdateTeamDTO;
+import com.example.football_championship.model.Match;
+import com.example.football_championship.model.Team;
+import com.example.football_championship.repository.MatchRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class MatchServiceTest {
+
+    @Mock
+    private MatchRepository matchRepository;
+
+    @Mock
+    private TeamService teamService;
+
+    @InjectMocks
+    private MatchService matchService;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);  // Initialize mocks
+    }
+
+    @Test
+    void testAddMatch() {
+        // Prepare input data
+        CreateMatchDTO matchDTO1 = new CreateMatchDTO();
+        matchDTO1.setTeamA("TeamA");
+        matchDTO1.setTeamB("TeamB");
+        matchDTO1.setTeamAScore(2);
+        matchDTO1.setTeamBScore(1);
+
+        List<CreateMatchDTO> matchDTOList = Arrays.asList(matchDTO1);
+
+        // Prepare mock Team objects
+        Team teamA = new Team();
+        teamA.setName("TeamA");
+        Team teamB = new Team();
+        teamB.setName("TeamB");
+
+        // Mock behaviors of teamService and matchRepository
+        when(teamService.getTeamDetails("TeamA")).thenReturn(teamA);
+        when(teamService.getTeamDetails("TeamB")).thenReturn(teamB);
+        when(matchRepository.save(any(Match.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // Call the method under test
+        List<Match> result = matchService.addMatch(matchDTOList);
+
+        // Verify that teamService.updateTeamDetails was called for both teams
+        verify(teamService, times(2)).updateTeamDetails(any(UpdateTeamDTO.class));
+
+        // Verify that matchRepository.save was called
+        verify(matchRepository, times(1)).save(any(Match.class));
+
+        // Validate the result
+        assertEquals(1, result.size());
+        assertEquals("TeamA", result.get(0).getTeamA());
+        assertEquals("TeamB", result.get(0).getTeamB());
+        assertEquals(2, result.get(0).getTeamAScore());
+        assertEquals(1, result.get(0).getTeamBScore());
+    }
+
+    @Test
+    void testAddMatch_InvalidScores() {
+        // Prepare input data with invalid score
+        CreateMatchDTO matchDTO1 = new CreateMatchDTO();
+        matchDTO1.setTeamA("TeamA");
+        matchDTO1.setTeamB("TeamB");
+        matchDTO1.setTeamAScore(-1);  // Invalid score
+        matchDTO1.setTeamBScore(1);
+
+        List<CreateMatchDTO> matchDTOList = Arrays.asList(matchDTO1);
+
+        // Expect IllegalArgumentException when calling addMatch
+        assertThrows(IllegalArgumentException.class, () -> matchService.addMatch(matchDTOList));
+    }
+}
