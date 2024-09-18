@@ -1,25 +1,25 @@
 package com.example.football_championship.controller;
 
+import com.example.football_championship.DTO.CreateMatchDTO;
 import com.example.football_championship.model.Match;
-import com.example.football_championship.model.Team;
-import com.example.football_championship.service.FootballService;
+import com.example.football_championship.service.MatchService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/football")
-public class FootballController {
+@RequestMapping("/api/match")
+public class MatchController {
 
-    private final FootballService footballService;
+    private final MatchService matchService;
 
-    public FootballController(FootballService footballService) {
-        this.footballService = footballService;
+    public MatchController(MatchService matchService) {
+        this.matchService = matchService;
     }
 
-//    @PostMapping("/match")
-//    public ResponseEntity<Match> addMatch(@RequestBody Match match) {
-//        return ResponseEntity.ok(footballService.addMatch(match));
-//    }
+    @PostMapping(value = "/addMatches", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<List<Match>> addMatch(@RequestBody List<CreateMatchDTO> dtoList) {
+        return ResponseEntity.ok(matchService.addMatch(dtoList));
+    }
 }
