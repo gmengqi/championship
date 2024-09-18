@@ -2,6 +2,8 @@ package com.example.football_championship.repository;
 
 import com.example.football_championship.audit.AuditLog;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface AuditRepository extends JpaRepository<AuditLog, Long> {
+@Repository
+public interface AuditLogRepository extends JpaRepository<AuditLog, Long> {
 }

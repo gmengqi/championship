@@ -1,10 +1,12 @@
 package com.example.football_championship.model;
 
+import com.example.football_championship.audit.AuditListener;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "t_team_entity")
+@EntityListeners(AuditListener.class)
 public class Team extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
