@@ -1,12 +1,12 @@
 package com.example.football_championship.model;
 
-import com.example.football_championship.audit.AuditListener;
+//import com.example.football_championship.audit.AuditListener;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "t_team_entity")
-@EntityListeners(AuditListener.class)
+//@EntityListeners(AuditListener.class)
 public class Team extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -80,5 +80,10 @@ public class Team extends BaseEntity{
 
     public int getTotalMatchPoints() {
         return this.matchPoints;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Adding team: %s", name);
     }
 }

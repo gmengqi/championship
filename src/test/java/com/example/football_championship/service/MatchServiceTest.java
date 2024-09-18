@@ -4,6 +4,7 @@ import com.example.football_championship.DTO.CreateMatchDTO;
 import com.example.football_championship.DTO.UpdateTeamDTO;
 import com.example.football_championship.model.Match;
 import com.example.football_championship.model.Team;
+import com.example.football_championship.repository.AuditLogRepository;
 import com.example.football_championship.repository.MatchRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,9 @@ class MatchServiceTest {
 
     @Mock
     private MatchRepository matchRepository;
+
+    @Mock
+    private AuditLogRepository auditLogRepository;
 
     @Mock
     private TeamService teamService;

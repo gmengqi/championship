@@ -3,8 +3,10 @@ package com.example.football_championship.service;
 import com.example.football_championship.DTO.CreateTeamDTO;
 import com.example.football_championship.DTO.TeamProcessingResult;
 import com.example.football_championship.DTO.UpdateTeamDTO;
+import com.example.football_championship.audit.AuditLog;
 import com.example.football_championship.comparator.TeamRankingComparator;
 import com.example.football_championship.model.Team;
+import com.example.football_championship.repository.AuditLogRepository;
 import com.example.football_championship.repository.TeamRepository;
 import com.example.football_championship.utils.DateUtils;
 
@@ -13,13 +15,28 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
+
+import static com.example.football_championship.utils.AuditLogUtils.createAuditLog;
 
 @Service
 @Transactional
 public class TeamService {
     @Autowired
     private TeamRepository teamRepository;
+
+    @Autowired
+    private AuditLogRepository auditLogRepository;
+
+    public void createAuditLog(String action, String entityName, String details) {
+        AuditLog log = new AuditLog();
+        log.setAction(action);
+        log.setEntityName(entityName);
+        log.setDetails(details);
+        log.setTimestamp(LocalDateTime.now());
+        auditLogRepository.save(log);
+    }
 
 
     public TeamProcessingResult addTeams(List<CreateTeamDTO> teamDTOs) {
@@ -37,7 +54,6 @@ public class TeamService {
 
                 // Add to the list of valid teams
                 validTeams.add(team);
-
             } catch (IllegalArgumentException e) {
                 // Log the error or collect the error message for later reporting
                 errorMessages.add("Error processing team: " + dto.getName() + " - " + e.getMessage());
@@ -46,6 +62,7 @@ public class TeamService {
 
         TeamProcessingResult result = new TeamProcessingResult();
         teamRepository.saveAll(validTeams);
+        createAuditLog("INSERT", "Team", validTeams.toString());
         result.setValidTeams(validTeams);
         result.setErrors(errorMessages);
         return result;
@@ -59,6 +76,7 @@ public class TeamService {
             throw new NoSuchElementException(name + " do not exists");
         }
 
+        createAuditLog("GET", "Team", team.get().name);
         return team.get();
     }
 
@@ -67,6 +85,7 @@ public class TeamService {
 
         if (team.isPresent()) {
             teamRepository.deleteByName(name);
+            createAuditLog("DELETE", "Team", team.get().name);
             return true;
         } else {
             throw new NoSuchElementException("Team do not exists");
@@ -88,10 +107,11 @@ public class TeamService {
                 existingTeam.setAlternatePoints(updateTeamDTO.getAlternatePoints() + existingTeam.alternatePoints);
                 existingTeam.setMatchesPlayed(updateTeamDTO.getMatchesPlayed() + existingTeam.matchesPlayed);
                 // Save the updated team back to the database
-                return teamRepository.save(existingTeam);
+                Team teamUpdated = teamRepository.save(existingTeam);
+                createAuditLog("UPDATE", "Team", existingTeam.name);
+                return teamUpdated;
             } catch (Exception e) {
                 throw new RuntimeException("Team not found with name: " + existingTeam.name);
-
             }
         } else {
             throw new NoSuchElementException("The team does not exists");
@@ -106,6 +126,7 @@ public class TeamService {
             throw new NoSuchElementException("Such group number does not exist");
         } else {
             Collections.sort(teams, new TeamRankingComparator());
+            createAuditLog("GET", "Team", "Get ranking for teams");
             return teams;
         }
     }

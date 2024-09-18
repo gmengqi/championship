@@ -1,22 +1,22 @@
 package com.example.football_championship.service;
 
 import com.example.football_championship.DTO.CreateMatchDTO;
-import com.example.football_championship.DTO.TeamProcessingResult;
 import com.example.football_championship.DTO.UpdateTeamDTO;
+import com.example.football_championship.audit.AuditLog;
 import com.example.football_championship.model.Match;
 import com.example.football_championship.model.Team;
+import com.example.football_championship.repository.AuditLogRepository;
 import com.example.football_championship.repository.MatchRepository;
-import com.example.football_championship.utils.DateUtils;
-import org.hibernate.sql.Update;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.football_championship.utils.AuditLogUtils.createAuditLog;
 
 @Service
 @Transactional
@@ -24,6 +24,9 @@ public class MatchService {
 
     @Autowired
     private MatchRepository matchRepository;
+
+    @Autowired
+    private AuditLogRepository auditLogRepository;
 
     @Autowired
     private TeamService teamService;
@@ -101,8 +104,18 @@ public class MatchService {
             match.setTeamBScore(dto.getTeamBScore());
             match.setTeamAScore(dto.getTeamAScore());
             matchRepository.save(match);
+            createAuditLog("INSERT", "Match", match.toString());
             validMatch.add(match);
         });
         return validMatch;
+    }
+
+    public void createAuditLog(String action, String entityName, String details) {
+        AuditLog log = new AuditLog();
+        log.setAction(action);
+        log.setEntityName(entityName);
+        log.setDetails(details);
+        log.setTimestamp(LocalDateTime.now());
+        auditLogRepository.save(log);
     }
 }

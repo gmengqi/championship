@@ -1,11 +1,9 @@
 package com.example.football_championship.model;
 
-import com.example.football_championship.audit.AuditListener;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "t_match_entity")
-@EntityListeners(AuditListener.class)
 public class Match extends BaseEntity {
 
     @Id
@@ -60,5 +58,9 @@ public class Match extends BaseEntity {
 
     public void setTeamBScore(int teamBGoals) {
         this.teamBGoals = teamBGoals;
+    }
+    @Override
+    public String toString() {
+        return String.format("Adding match result for %s and %s", teamAName, teamBName);
     }
 }

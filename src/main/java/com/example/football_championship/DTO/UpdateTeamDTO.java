@@ -66,5 +66,4 @@ public class UpdateTeamDTO {
     public void setAlternatePoints(int points) {
         this.alternatePoints = points;
     }
-
 }
