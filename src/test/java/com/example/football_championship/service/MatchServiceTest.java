@@ -65,7 +65,7 @@ class MatchServiceTest {
         ProcessingResult<Match> result = matchService.addMatch(matchDTOList);
 
         // Verify that teamService.updateTeamDetails was called for both teams
-        verify(teamService, times(2)).updateTeamDetails("UPDATE", any(UpdateTeamDTO.class));
+        verify(teamService, times(2)).updateTeamDetails(any(), any(UpdateTeamDTO.class));
 
         // Verify that matchRepository.save was called
         verify(matchRepository, times(1)).saveAll(anyList());

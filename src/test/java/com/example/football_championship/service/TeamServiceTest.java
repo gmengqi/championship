@@ -104,7 +104,7 @@ class TeamServiceTest {
         teamB.setGroupNumber(1);
 
         // Mock repository behavior
-        when(teamRepository.saveAll(anyList())).thenReturn(Arrays.asList(teamA, teamB));
+        when(teamRepository.saveAll(anyList())).thenReturn(Arrays.asList(teamA));
 
         // Call the method under test
         ProcessingResult result = teamService.addTeams(teamDTOList);

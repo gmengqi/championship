@@ -51,7 +51,7 @@ public class TeamService {
                 }
 
                 int groupNum = dto.getGroupNumber();
-                if (groupNum != 1 || groupNum != 2) {
+                if (groupNum > 2 || groupNum < 1) {
                     throw new IllegalArgumentException("Group number should either be 1 or 2 ");
                 }
 
@@ -63,7 +63,7 @@ public class TeamService {
                 // Add to the list of valid teams
                 validTeams.add(team);
             } catch (IllegalArgumentException e) {
-                String msg = String.format("Error processing tea for %s: %s", dto.getName(), e.getMessage());
+                String msg = String.format("Error processing team for %s: %s", dto.getName(), e.getMessage());
                 errorMessages.add(msg);
             }
         });
@@ -106,6 +106,11 @@ public class TeamService {
         if (team.isPresent()) {
             Team existingTeam = team.get();
             // Update the team details with the new values
+            String newName = updateTeamDTO.getNewName();
+            if (teamRepository.findByName(newName).isPresent()) {
+                throw new IllegalArgumentException("Team name already taken");
+            }
+
             existingTeam.setName(updateTeamDTO.getNewName() != null ? updateTeamDTO.getNewName() : existingTeam.getName());
             existingTeam.setRegistrationDate(updateTeamDTO.getNewRegistrationDate() != null ? updateTeamDTO.getNewRegistrationDate() : existingTeam.getRegistrationDate());
             existingTeam.setGroupNumber(updateTeamDTO.getGroupNumber() != null ? updateTeamDTO.getGroupNumber() : existingTeam.getGroupNumber());
