@@ -1,6 +1,7 @@
 package com.example.football_championship.service;
 
 import com.example.football_championship.DTO.CreateMatchDTO;
+import com.example.football_championship.DTO.ProcessingResult;
 import com.example.football_championship.DTO.UpdateTeamDTO;
 import com.example.football_championship.model.Match;
 import com.example.football_championship.model.Team;
@@ -61,20 +62,20 @@ class MatchServiceTest {
         when(matchRepository.save(any(Match.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         // Call the method under test
-        List<Match> result = matchService.addMatch(matchDTOList);
+        ProcessingResult<Match> result = matchService.addMatch(matchDTOList);
 
         // Verify that teamService.updateTeamDetails was called for both teams
-        verify(teamService, times(2)).updateTeamDetails(any(UpdateTeamDTO.class));
+        verify(teamService, times(2)).updateTeamDetails("UPDATE", any(UpdateTeamDTO.class));
 
         // Verify that matchRepository.save was called
-        verify(matchRepository, times(1)).save(any(Match.class));
+        verify(matchRepository, times(1)).saveAll(anyList());
 
         // Validate the result
-        assertEquals(1, result.size());
-        assertEquals("TeamA", result.get(0).getTeamA());
-        assertEquals("TeamB", result.get(0).getTeamB());
-        assertEquals(2, result.get(0).getTeamAScore());
-        assertEquals(1, result.get(0).getTeamBScore());
+        assertEquals(1, result.getValidData().size());
+        assertEquals("TeamA", result.getValidData().get(0).getTeamA());
+        assertEquals("TeamB", result.getValidData().get(0).getTeamB());
+        assertEquals(2, result.getValidData().get(0).getTeamAScore());
+        assertEquals(1, result.getValidData().get(0).getTeamBScore());
     }
 
     @Test
@@ -88,7 +89,11 @@ class MatchServiceTest {
 
         List<CreateMatchDTO> matchDTOList = Arrays.asList(matchDTO1);
 
+        ProcessingResult<Match> result = matchService.addMatch(matchDTOList);
+
+
         // Expect IllegalArgumentException when calling addMatch
-        assertThrows(IllegalArgumentException.class, () -> matchService.addMatch(matchDTOList));
+        assertEquals(1, result.getErrors().size());
+        assertEquals(0, result.getValidData().size());
     }
 }

@@ -1,12 +1,11 @@
 package com.example.football_championship.service;
 
 import com.example.football_championship.DTO.CreateTeamDTO;
-import com.example.football_championship.DTO.TeamProcessingResult;
+import com.example.football_championship.DTO.ProcessingResult;
 import com.example.football_championship.DTO.UpdateTeamDTO;
 import com.example.football_championship.model.Team;
 import com.example.football_championship.repository.AuditLogRepository;
 import com.example.football_championship.repository.TeamRepository;
-import com.example.football_championship.utils.DateUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -68,13 +67,13 @@ class TeamServiceTest {
         when(teamRepository.saveAll(anyList())).thenReturn(Arrays.asList(teamA, teamB));
 
         // Call the method under test
-        TeamProcessingResult result = teamService.addTeams(teamDTOList);
+        ProcessingResult result = teamService.addTeams(teamDTOList);
 
         // Verify that the teams were saved
         verify(teamRepository, times(1)).saveAll(anyList());
 
         // Validate result
-        assertEquals(2, result.getValidTeams().size());
+        assertEquals(2, result.getValidData().size());
         assertTrue(result.getErrors().isEmpty());
     }
 
@@ -108,13 +107,13 @@ class TeamServiceTest {
         when(teamRepository.saveAll(anyList())).thenReturn(Arrays.asList(teamA, teamB));
 
         // Call the method under test
-        TeamProcessingResult result = teamService.addTeams(teamDTOList);
+        ProcessingResult result = teamService.addTeams(teamDTOList);
 
         // Verify that the teams were saved
         verify(teamRepository, times(1)).saveAll(anyList());
 
         // Validate result
-        assertEquals(1, result.getValidTeams().size());
+        assertEquals(1, result.getValidData().size());
         assertEquals(1, result.getErrors().size());
     }
 
@@ -194,7 +193,7 @@ class TeamServiceTest {
         when(teamRepository.save(any(Team.class))).thenReturn(existingTeam);
 
         // Call the method under test
-        Team result = teamService.updateTeamDetails(updateDTO);
+        Team result = teamService.updateTeamDetails("EDIT", updateDTO);
 
         // Verify the update was successful
         assertEquals("TeamA New", result.getName());

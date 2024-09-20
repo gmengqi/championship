@@ -1,6 +1,5 @@
 package com.example.football_championship.model;
 
-//import com.example.football_championship.audit.AuditListener;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
@@ -21,10 +20,10 @@ public class Team extends BaseEntity{
     @Column(nullable = false)
     public int groupNumber;
 
-    public int totalGoals = 0;
-    public int matchPoints = 0;
-    public int alternatePoints = 0;
-    public int matchesPlayed = 0;
+    public Integer totalGoals = 0;
+    public Integer matchPoints = 0;
+    public Integer alternatePoints = 0;
+    public Integer matchesPlayed = 0;
 
     public String getName() {
         return name;
@@ -34,7 +33,7 @@ public class Team extends BaseEntity{
         this.name = name;
     }
 
-    public void setMatchesPlayed(int matchesPlayed) {
+    public void setMatchesPlayed(Integer matchesPlayed) {
         this.matchesPlayed = matchesPlayed;
     }
 
@@ -58,7 +57,7 @@ public class Team extends BaseEntity{
         return totalGoals;
     }
 
-    public void setTotalGoals(int totalGoals) {
+    public void setTotalGoals(Integer totalGoals) {
         this.totalGoals = totalGoals;
     }
 
@@ -66,7 +65,7 @@ public class Team extends BaseEntity{
         return matchPoints;
     }
 
-    public void setMatchPoints(int matchPoints) {
+    public void setMatchPoints(Integer matchPoints) {
         this.matchPoints = matchPoints;
     }
 
@@ -74,11 +73,11 @@ public class Team extends BaseEntity{
         return alternatePoints;
     }
 
-    public void setAlternatePoints(int alternatePoints) {
+    public void setAlternatePoints(Integer alternatePoints) {
         this.alternatePoints = alternatePoints;
     }
 
-    public int getTotalMatchPoints() {
+    public Integer getTotalMatchPoints() {
         return this.matchPoints;
     }
 

@@ -1,7 +1,7 @@
 package com.example.football_championship.controller;
 
 import com.example.football_championship.DTO.CreateTeamDTO;
-import com.example.football_championship.DTO.TeamProcessingResult;
+import com.example.football_championship.DTO.ProcessingResult;
 import com.example.football_championship.DTO.UpdateTeamDTO;
 import com.example.football_championship.model.Team;
 import com.example.football_championship.service.TeamService;
@@ -30,8 +30,8 @@ public class TeamController {
 
     @PostMapping(value = "/addTeams", consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<TeamProcessingResult> addTeam(@RequestBody List<CreateTeamDTO> teamDTOs) {
-        TeamProcessingResult result = teamService.addTeams(teamDTOs);
+    public ResponseEntity<ProcessingResult> addTeam(@RequestBody List<CreateTeamDTO> teamDTOs) {
+        ProcessingResult result = teamService.addTeams(teamDTOs);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(result);
@@ -48,9 +48,9 @@ public class TeamController {
         return ResponseEntity.ok(teamService.getRankingsByGroup(groupNumber));
     }
 
-    @PutMapping("/updateTeam")
-    public ResponseEntity<Team> updateTeamDetails(@RequestBody UpdateTeamDTO updateTeamDTO) {
-        return ResponseEntity.ok(teamService.updateTeamDetails(updateTeamDTO));
+    @PutMapping(value = "/updateTeam/{operation}", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<Team> updateTeamDetails(@PathVariable String operation, @RequestBody UpdateTeamDTO updateTeamDTO) {
+        return ResponseEntity.ok(teamService.updateTeamDetails(operation, updateTeamDTO));
     }
 
     @GetMapping("/rankings/getOutcome/{teamName}/{groupNumber}")

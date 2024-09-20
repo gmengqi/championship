@@ -8,11 +8,11 @@ public class UpdateTeamDTO {
     private String teamName;
     private String newName=null;
     private LocalDate newRegistrationDate=null;
-    private Integer groupNumber=-1;
-    public Integer totalGoals=0;
-    public Integer matchPoints=0;
-    public Integer alternatePoints=0;
-    public Integer matchesPlayed=0;
+    private Integer groupNumber=null;
+    public Integer totalGoals=null;
+    public Integer matchPoints=null;
+    public Integer alternatePoints=null;
+    public Integer matchesPlayed=null;
 
     // Getters and setters
     public String getTeamName() {
@@ -28,7 +28,7 @@ public class UpdateTeamDTO {
         return newRegistrationDate;
     }
 
-    public int getMatchesPlayed() {
+    public Integer getMatchesPlayed() {
         return this.matchesPlayed;
     }
 
@@ -37,15 +37,15 @@ public class UpdateTeamDTO {
     }
 
     public Integer getTotalGoals() {
-        return totalGoals;
+        return this.totalGoals;
     }
 
-    public void setTotalGoals(int totalGoals) { this.totalGoals = totalGoals + this.totalGoals; }
+    public void setTotalGoals(Integer totalGoals) { this.totalGoals = totalGoals; }
 
     public Integer getMatchPoints() {
         return matchPoints;
     }
-    public void setMatchPoints(int matchPoints) { this.matchPoints = matchPoints + this.matchPoints; }
+    public void setMatchPoints(Integer matchPoints) { this.matchPoints = matchPoints; }
 
     public Integer getAlternatePoints() {
         return alternatePoints;
@@ -55,15 +55,15 @@ public class UpdateTeamDTO {
         this.newName = name;
     }
 
-    public void setGroupNumber(int number) {
+    public void setGroupNumber(Integer number) {
         this.groupNumber = number;
     }
 
-    public void setMatchesPlayed(int matches) {
+    public void setMatchesPlayed(Integer matches) {
         this.matchesPlayed = matches;
     }
 
-    public void setAlternatePoints(int points) {
+    public void setAlternatePoints(Integer points) {
         this.alternatePoints = points;
     }
 }

@@ -1,20 +1,18 @@
 package com.example.football_championship.DTO;
 
-import com.example.football_championship.model.Team;
-
 import java.util.List;
 
-public class TeamProcessingResult {
-    private List<Team> validTeams;
+public class ProcessingResult<T> {
+    private List<T> validData;
     private List<String> errors;
 
     // Getters and setters for serialization
-    public List<Team> getValidTeams() {
-        return validTeams;
+    public List<T> getValidData() {
+        return validData;
     }
 
-    public void setValidTeams(List<Team> validTeams) {
-        this.validTeams = validTeams;
+    public void setValidData(List<T> validData) {
+        this.validData = validData;
     }
 
     public List<String> getErrors() {

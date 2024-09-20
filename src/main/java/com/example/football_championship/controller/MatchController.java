@@ -1,6 +1,7 @@
 package com.example.football_championship.controller;
 
 import com.example.football_championship.DTO.CreateMatchDTO;
+import com.example.football_championship.DTO.ProcessingResult;
 import com.example.football_championship.model.Match;
 import com.example.football_championship.service.MatchService;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class MatchController {
     }
 
     @PostMapping(value = "/addMatches", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<List<Match>> addMatch(@RequestBody List<CreateMatchDTO> dtoList) {
+    public ResponseEntity<ProcessingResult<Match>> addMatch(@RequestBody List<CreateMatchDTO> dtoList) {
         return ResponseEntity.ok(matchService.addMatch(dtoList));
     }
 }
